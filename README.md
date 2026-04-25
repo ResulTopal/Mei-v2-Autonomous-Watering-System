@@ -9,12 +9,12 @@
 
 ---
 
-## 🚀 Project Overview
+##  Project Overview
 Mei-v2 is built to solve real-world agricultural automation challenges on a micro-scale. Leveraging the powerful **ESP32-S3** microcontroller, it provides real-time data logging, cloud analytics, and secure remote control via a Telegram Bot interface. 
 
 The software architecture focuses on **non-blocking asynchronous task management** (using `yield()` and custom hardware timers) to prevent Watchdog Timer (WDT) resets and SSL handshake bottlenecks during heavy API traffic. A custom PCB has been designed to eliminate wiring interference and ensure industrial-grade reliability.
 
-## 📦 Parts Required
+##  Parts Required
 
 **Core Components:**
 * 1x ESP32 DevKit
@@ -37,7 +37,7 @@ The software architecture focuses on **non-blocking asynchronous task management
 
 ---
 
-## 💻 Uploading the Code to the ESP32
+##  Uploading the Code to the ESP32
 
 Upload the [firmware](Mei%20v2%20Autonomous%20Watering%20System/Software/Mei_v2/Mei_v2.ino) using **Arduino IDE**. Before uploading, ensure you have installed the following libraries via the Arduino Library Manager:
 
@@ -50,7 +50,7 @@ Upload the [firmware](Mei%20v2%20Autonomous%20Watering%20System/Software/Mei_v2/
 
 ---
 
-## 🔌 Hardware Architecture & Pinout
+##  Hardware Architecture & Pinout
 
 The hardware has been meticulously routed on a custom PCB. The pinout below reflects the optimized "Hardware-Software Co-design" approach to ensure clean signal routing and prevent Wi-Fi/ADC resource conflicts.
 
@@ -108,7 +108,7 @@ The hardware has been meticulously routed on a custom PCB. The pinout below refl
 
 ---
 
-## ⚙️ Step-by-Step Setup Guide
+##  Step-by-Step Setup Guide
 
 ### 1. Create Your Telegram Bot
 1. Open Telegram and search for **`@BotFather`**.
