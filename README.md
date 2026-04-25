@@ -92,8 +92,8 @@ The hardware has been meticulously routed on a custom PCB. The pinout below refl
 
 | Module / Pin | ESP32-S3 Pin | Additional Connection |
 | :--- | :--- | :--- |
-| **Purple Pump** | GPIO 1 | Connect to MOSFET 1 Gate |
-| **White Pump** | GPIO 40 | Connect to MOSFET 2 Gate |
+| **Pump 1** | GPIO 1 | Connect to MOSFET 1 Gate |
+| **Pump 2** | GPIO 40 | Connect to MOSFET 2 Gate |
 | **Pump Power (VCC)**| N/A | Connect to an **External 5V Power Supply** |
 | **Pump GND** | N/A | Must share a **Common Ground** with the ESP32 |
 | **Motor Terminals** | N/A | Add a **1N4007 Flyback Diode** parallel to the motor. |
