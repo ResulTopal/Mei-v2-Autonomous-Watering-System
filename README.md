@@ -1,6 +1,7 @@
 # 🌱 Mei-v2: ESP32-S3 Based Smart Agritech & IoT Irrigation System
 
-[Mei-v2 Final System]<img width="287" height="345" alt="image" src="https://github.com/user-attachments/assets/457f3bc2-d52b-421c-90fd-7c3fbf4ca366" />
+<img width="2160" height="3037" alt="PCB_2D_Mei_v2" src="https://github.com/user-attachments/assets/755130e7-cfbd-4333-9dd8-0047b86891fe" />
+
 
 <p align="center">
   <i>An end-to-end automated irrigation and environmental monitoring system designed for sensitive plant care, featuring asynchronous Telegram control and ThingSpeak data logging.</i>
@@ -16,7 +17,7 @@ The software architecture focuses on **non-blocking asynchronous task management
 ## 📦 Parts Required
 
 **Core Components:**
-* 1x ESP32-S3 Development Board (DevKitC-1 recommended)
+* 1x ESP32 DevKit
 * 1x 1.14" IPS LCD Display (ST7789 Driver, SPI Interface)
 * 1x DHT22 Temperature & Humidity Sensor
 * 2x Capacitive Soil Moisture Sensors (v1.2 recommended)
@@ -26,14 +27,19 @@ The software architecture focuses on **non-blocking asynchronous task management
 **Electronic Components & Power (Custom PCB Specs):**
 * 2x N-Channel Power MOSFETs (e.g., IRFZ44N) for driving the pumps
 * 2x 1N4007 Flyback Diodes (Crucial for preventing motor voltage spikes)
-* 1x 10kΩ Resistor (Pull-up for DHT22 data line)
+* 1x 10kΩ Resistor (Pull-up for DHT22 data line)(if there is non between gnd and signal pin)
 * 1x 5V Power Supply (Min 2A recommended to handle dual pump current spikes)
+
+**Additional - Connectors & Modularity (JST-XH Series):**
+* 4x JST-XH 2-pin connector
+* 3x JST-XH 3-pin connector
+* 1x JST-XH 8-pin connector
 
 ---
 
 ## 💻 Uploading the Code to the ESP32
 
-Upload the firmware using **Arduino IDE**. Before uploading, ensure you have installed the following libraries via the Arduino Library Manager:
+Upload the [firmware](Mei%20v2%20Autonomous%20Watering%20System/Software/Mei_v2/Mei_v2.ino) using **Arduino IDE**. Before uploading, ensure you have installed the following libraries via the Arduino Library Manager:
 
 * `UniversalTelegramBot` by Brian Lough
 * `ThingSpeak` by MathWorks
@@ -78,8 +84,8 @@ The hardware has been meticulously routed on a custom PCB. The pinout below refl
 | :--- | :--- | :--- |
 | **VCC (Both)** | 3.3V | Powering with 3.3V extends sensor lifespan. |
 | **GND (Both)** | GND | (-) Ground |
-| **SIG (Purple Plant)**| GPIO 5 | ADC1 Channel (Mapped 4095 to 1000) |
-| **SIG (White Plant)** | GPIO 6 | ADC1 Channel (Mapped 4095 to 1000) |
+| **SIG (Plant 1)**| GPIO 5 | ADC1 Channel (Mapped 4095 to 1000) |
+| **SIG (Plant 2)** | GPIO 6 | ADC1 Channel (Mapped 4095 to 1000) |
 
 ### Submersible Water Pumps (Actuators)
 *Driven by IRFZ44N MOSFETs located on the right side of the PCB for optimized trace routing.*
@@ -131,5 +137,5 @@ The hardware has been meticulously routed on a custom PCB. The pinout below refl
 * `✨ /smile` - Prints a random easter-egg message from a Flash-memory stored array.
 
 ## 📊 Roadmap & Milestones
-* [x] **Custom PCB Design:** Successfully migrated from protoboard to a custom-designed, noise-isolated PCB via EasyEDA. (Gerber & Source files available in the `Hardware/` directory).
+* [x] **Custom PCB Design:** Successfully migrated from protoboard to a custom-designed, noise-isolated PCB via EasyEDA. (Gerber & Source files available in the [Hardware/](Mei%20v2%20Autonomous%20Watering%20System/Hardware/) directory).
 * [ ] **Predictive Analysis:** Utilizing the exported CSV time-series data from ThingSpeak to train a basic Machine Learning regression model for water depletion forecasting.
