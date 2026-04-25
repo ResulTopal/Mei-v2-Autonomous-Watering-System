@@ -139,3 +139,6 @@ The hardware has been meticulously routed on a custom PCB. The pinout below refl
 ## 📊 Roadmap & Milestones
 * [x] **Custom PCB Design:** Successfully migrated from protoboard to a custom-designed, noise-isolated PCB via EasyEDA. (Gerber & Source files available in the [Hardware/](Mei%20v2%20Autonomous%20Watering%20System/Hardware/) directory).
 * [ ] **Predictive Analysis:** Utilizing the exported CSV time-series data from ThingSpeak to train a basic Machine Learning regression model for water depletion forecasting.
+
+<img width="2160" height="2335" alt="3D_PCB3_2026-04-25 (3)" src="https://github.com/user-attachments/assets/18a9842b-71f1-4aa8-9c53-d6b50b36cf76" />
+
