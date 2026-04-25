@@ -1,6 +1,6 @@
 # 🌱 Mei-v2: ESP32-S3 Based Smart Agritech & IoT Irrigation System
 
-<img width="2160" height="3037" alt="PCB_2D_Mei_v2" src="https://github.com/user-attachments/assets/755130e7-cfbd-4333-9dd8-0047b86891fe" />
+<img width="2016" height="1420" alt="PCB_2D_Mei_v2" src="https://github.com/user-attachments/assets/7a1c69ab-56e7-40a2-8ddc-feddd954f4a6" />
 
 
 <p align="center">
