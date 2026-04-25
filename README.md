@@ -35,9 +35,6 @@ The software architecture focuses on **non-blocking asynchronous task management
 * 3x JST-XH 3-pin connector
 * 1x JST-XH 8-pin connector
 
-<img width="1190" height="852" alt="Schematic_View_Mei_v2" src="https://github.com/user-attachments/assets/2b528a7e-313b-4020-b6cc-1ab8ad046026" />
-
-
 ---
 
 ##  Uploading the Code to the ESP32
@@ -127,6 +124,8 @@ The hardware has been meticulously routed on a custom PCB. The pinout below refl
    * Field 4: White Plant Moisture (%)
    * Field 5: Target Humidity (%)
 3. Go to the **API Keys** tab and copy your `Channel ID` and `Write API Key`.
+
+<img width="1190" height="852" alt="Schematic_View_Mei_v2" src="https://github.com/user-attachments/assets/2b528a7e-313b-4020-b6cc-1ab8ad046026" />
 
 ---
 
