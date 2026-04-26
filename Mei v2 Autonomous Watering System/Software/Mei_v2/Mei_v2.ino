@@ -21,7 +21,7 @@ UniversalTelegramBot bot(BOT_TOKEN, secured_client);
 
 // --- THINGSPEAK SETTINGS ---
 unsigned long myChannelNumber = 0000000; 
-const char * myWriteAPIKey = "YOUR_THINGSPEAK_API_KEY";
+const char * myWriteAPIKey = "YOUR_THINGSPEAK_API_KEY"; 
 
 unsigned long lastTimeSentToCloud = 0;
 const unsigned long postingInterval = 15L * 60L * 1000L; 
@@ -39,7 +39,6 @@ bool wifiErrorIconVisible = false;
 #define TFT_CS    10 
 const int blkPin = 9; 
 
-
 #define DHTPIN          4
 #define DHTTYPE         DHT22
 #define FLOAT_SWITCH_PIN 46  
@@ -49,13 +48,11 @@ const int blkPin = 9;
 #define MOISTURE_PIN_WHITE  6 
 #define PUMP_PIN_WHITE      40  
 
-
-
 // 3. SYSTEM PARAMETERS
-int AirValue = 4095;   
+int AirValue = 4095; 
 int WaterValue = 1000; 
-const int WATERING_DURATION = 2000;   
-const long COOLDOWN = 400050;     
+int WATERING_DURATION = 2000;   
+long COOLDOWN = 400050;     
 
 int targetHumidity = 33;        
 int screenBrightness = 80;
@@ -64,7 +61,10 @@ unsigned long actionTimerPurple = 0;
 bool isWateringPurple = false;
 unsigned long actionTimerWhite = 0;
 bool isWateringWhite = false;
+
 unsigned long prevM = 0;
+int purplePumpCount = 0;
+int whitePumpCount = 0;
 
 // Custom Color Definitions
 #define COLOR_PURPLE 0x781F 
@@ -78,18 +78,18 @@ DHT dht(DHTPIN, DHTTYPE);
 
 // 4. CUSTOM EMOJI AND DRAWING FUNCTIONS
 void drawRose(int x, int y) {
-  tft.fillCircle(x, y, 4, ST77XX_RED);          
+  tft.fillCircle(x, y, 4, ST77XX_RED);
   tft.fillCircle(x-4, y-4, 4, ST77XX_RED);      
   tft.fillCircle(x+4, y-4, 4, ST77XX_RED);      
   tft.fillCircle(x-4, y+4, 4, ST77XX_RED);      
   tft.fillCircle(x+4, y+4, 4, ST77XX_RED);      
-  tft.fillCircle(x, y, 2, 0xF81F);              
+  tft.fillCircle(x, y, 2, 0xF81F);
   tft.drawLine(x, y+6, x, y+14, COLOR_GREEN);    
 }
 
 void drawSmileyFace(int x, int y) {
   tft.fillCircle(x, y, 8, COLOR_YELLOW);           
-  tft.drawPixel(x-3, y-2, ST77XX_BLACK);        
+  tft.drawPixel(x-3, y-2, ST77XX_BLACK);
   tft.drawPixel(x-2, y-2, ST77XX_BLACK);
   tft.drawPixel(x+3, y-2, ST77XX_BLACK);        
   tft.drawPixel(x+2, y-2, ST77XX_BLACK);
@@ -101,24 +101,24 @@ void drawSmileyFace(int x, int y) {
   tft.drawPixel(x, y+4, ST77XX_BLACK); 
   
   tft.drawLine(x-4, y+2, x-2, y+3, ST77XX_BLACK);
-  tft.drawLine(x-2, y+3, x+2, y+3, ST77XX_BLACK); 
+  tft.drawLine(x-2, y+3, x+2, y+3, ST77XX_BLACK);
   tft.drawLine(x+2, y+3, x+4, y+2, ST77XX_BLACK);
 }
 
 void drawExclamation(int x, int y) {
-  tft.fillCircle(x, y, 8, ST77XX_RED);          
+  tft.fillCircle(x, y, 8, ST77XX_RED);
   tft.fillRect(x-1, y-5, 3, 6, ST77XX_WHITE);   
-  tft.fillRect(x-1, y+3, 3, 3, ST77XX_WHITE);   
+  tft.fillRect(x-1, y+3, 3, 3, ST77XX_WHITE);
 }
 
 void drawNoWiFi(int x, int y) {
   tft.drawCircle(x, y + 2, 9, ST77XX_WHITE); 
-  tft.drawCircle(x, y + 2, 6, ST77XX_WHITE); 
+  tft.drawCircle(x, y + 2, 6, ST77XX_WHITE);
   tft.drawCircle(x, y + 2, 3, ST77XX_WHITE); 
-  tft.fillRect(x - 10, y + 4, 21, 12, ST77XX_BLACK); 
+  tft.fillRect(x - 10, y + 4, 21, 12, ST77XX_BLACK);
   tft.fillCircle(x, y + 10, 2, ST77XX_WHITE); 
   tft.drawLine(x - 7, y - 3, x + 7, y + 13, ST77XX_RED);
-  tft.drawLine(x - 6, y - 3, x + 8, y + 13, ST77XX_RED); 
+  tft.drawLine(x - 6, y - 3, x + 8, y + 13, ST77XX_RED);
 }
 
 // 5. WIFI SETUP AND TELEGRAM FUNCTIONS
@@ -135,7 +135,7 @@ void configModeCallback (WiFiManager *myWiFiManager) {
   tft.println("2. Su Aga Baglan:");
   tft.setTextColor(COLOR_GREEN);
   tft.setCursor(18, 68); 
-  tft.println("> Al Sana Cicke <"); 
+  tft.println("> Al Sana Cicke <");
   tft.setTextColor(ST77XX_WHITE);
   tft.setCursor(0, 88);
   tft.println("3. WiFi Config Tikla"); 
@@ -147,6 +147,7 @@ void handleNewMessages(int numNewMessages) {
   for (int i = 0; i < numNewMessages; i++) {
     String chat_id = String(bot.messages[i].chat_id);
     
+    // Security check for unauthorized access
     if (chat_id != CHAT_ID_1 && chat_id != CHAT_ID_2) {
       bot.sendMessage(chat_id, "Yetkisiz erişim denemesi tespit edildi.", "");
       continue;
@@ -155,36 +156,37 @@ void handleNewMessages(int numNewMessages) {
     String text = bot.messages[i].text;
     
     if (text == "/help" || text == "/start") {
-      String helpMessage = "ꨄ︎  Mei v2 Sulama Sistemi  ꨄ︎\n\n";
+      String helpMessage = "✮⋆˙  Mei v2 Sulama Sistemi  ˙⋆✮\n\n";
       helpMessage += "Kullanabileceğin Komutlar:\n\n";
       helpMessage += "📊 /status - Sensörleri ve depo durumunu gösterir.\n\n";
       helpMessage += "💧 /nem - Hedef sulama nemini ayarlar.\n    (Örn: /nem 40)\n\n";
       helpMessage += "💡 /light - Ekran parlaklığını ayarlar.\n    (Örn: /light 50)\n\n";
+      helpMessage += "⏳ /time - Sulama süresini ayarlar (Saniye).\n    (Örn: /time 3)\n\n";
+      helpMessage += "⏱️ /wait - Bekleme süresini ayarlar (Dakika).\n    (Örn: /wait 10)\n\n";
       helpMessage += "❓ /help - Bu komut listesini gösterir.";
       bot.sendMessage(chat_id, helpMessage, "");
     }
     
     else if (text.startsWith("/light ")) {
-      String valueStr = text.substring(7); 
+      String valueStr = text.substring(7);
       int newBrightness = valueStr.toInt();    
       
       if (newBrightness >= 0 && newBrightness <= 100) {
-        screenBrightness = newBrightness; 
+        screenBrightness = newBrightness;
         int pwmValue = map(screenBrightness, 0, 100, 0, 255); 
-        analogWrite(blkPin, pwmValue); 
+        analogWrite(blkPin, pwmValue);
         bot.sendMessage(chat_id, "💡 Ekran parlaklığı başarıyla %" + String(screenBrightness) + " olarak ayarlandı!", "");
       } else {
         bot.sendMessage(chat_id, "⚠️ Lütfen 0 ile 100 arasında bir parlaklık değeri girin.\nÖrnek kullanım: /light 80", "");
       }
     }
-
     
     else if (text.startsWith("/nem ")) {
       String valueStr = text.substring(5);
       int newValue = valueStr.toInt();    
       
       if (newValue >= 20 && newValue <= 75) {
-        targetHumidity = newValue; 
+        targetHumidity = newValue;
         tft.fillRect(174, 5, 42, 16, ST77XX_BLACK); 
         tft.setTextSize(2);
         tft.setTextColor(ST77XX_YELLOW);            
@@ -207,7 +209,9 @@ void handleNewMessages(int numNewMessages) {
       statusMsg += "🌡️ Sıcaklık: " + String(t, 1) + " °C\n";
       statusMsg += "💧 Hava Nemi: " + String(h, 0) + " %\n\n";
       statusMsg += "💡 Ekran Işığı: %" + String(screenBrightness) + "\n";
-      statusMsg += "🎯 Hedef Nem: " + String(targetHumidity) + " %\n\n";
+      statusMsg += "🎯 Hedef Nem: " + String(targetHumidity) + " %\n";
+      statusMsg += "⏱️ Sulama: " + String(WATERING_DURATION / 1000) + " sn\n";
+      statusMsg += "⏳ Bekleme: " + String(COOLDOWN / 60000) + " dk\n\n";
       statusMsg += "💜 Mor Orkide: " + String(moisturePurple) + " %\n";
       statusMsg += "🤍 Beyaz Orkide: " + String(moistureWhite) + " %\n\n";
       
@@ -218,6 +222,32 @@ void handleNewMessages(int numNewMessages) {
       }
       bot.sendMessage(chat_id, statusMsg, "");
     }
+
+    else if (text.startsWith("/time ")) {
+      String valueStr = text.substring(6);
+      int newDuration = valueStr.toInt();    
+      
+      // Güvenlik: 1-10 saniye arası
+      if (newDuration >= 1 && newDuration <= 10) {
+        WATERING_DURATION = newDuration * 1000;
+        bot.sendMessage(chat_id, "✅ Motor çalışma süresi başarıyla " + String(newDuration) + " saniye olarak ayarlandı!", "");
+      } else {
+        bot.sendMessage(chat_id, "⚠️ Lütfen 1 ile 10 saniye arasında güvenli bir değer girin.\nÖrnek: /time 3", "");
+      }
+    }
+
+    else if (text.startsWith("/wait ")) {
+      String valueStr = text.substring(6);
+      int newCooldown = valueStr.toInt();    
+      
+      // Güvenlik: 1-60 dakika arası
+      if (newCooldown >= 1 && newCooldown <= 60) {
+        COOLDOWN = newCooldown * 60L * 1000L;
+        bot.sendMessage(chat_id, "✅ Sulamalar arası bekleme süresi başarıyla " + String(newCooldown) + " dakika olarak ayarlandı!", "");
+      } else {
+        bot.sendMessage(chat_id, "⚠️ Lütfen 1 ile 60 dakika arasında bir değer girin.\nÖrnek: /wait 10", "");
+      }
+    }
   }
 }
 
@@ -225,8 +255,8 @@ void setup() {
   Serial.begin(115200);
   
   pinMode(blkPin, OUTPUT);
-  analogWrite(blkPin, map(screenBrightness, 0, 100, 0, 255)); 
-
+  analogWrite(blkPin, map(screenBrightness, 0, 100, 0, 255));
+  
   pinMode(PUMP_PIN_PURPLE, OUTPUT);
   pinMode(PUMP_PIN_WHITE, OUTPUT);
   pinMode(FLOAT_SWITCH_PIN, INPUT_PULLUP);
@@ -258,7 +288,7 @@ void setup() {
   tft.println("Baglaniliyor..");
 
   WiFiManager wm;
-  wm.setAPCallback(configModeCallback); 
+  wm.setAPCallback(configModeCallback);
   if (!wm.autoConnect("Al Sana Cicke")) { ESP.restart(); }
 
   secured_client.setInsecure();
@@ -275,7 +305,7 @@ void setup() {
   tft.setCursor(12, 85); 
   tft.println("Sistem Basliyor...");
   
-  String startupMsg = "🚀 Otonom Sulama Sistemi Başlatıldı.\nKomutları görmek için /help yazabilirsin. 🌼";
+  String startupMsg = "Otonom Sulama Sistemi Başlatıldı.\nKomutları görmek için /help yazabilirsin. 🌼";
   bot.sendMessage(CHAT_ID_1, startupMsg, "");
   if(String(CHAT_ID_2) != "" && String(CHAT_ID_2) != "0") {
      bot.sendMessage(CHAT_ID_2, startupMsg, "");
@@ -292,7 +322,7 @@ void setup() {
   tft.setCursor(175, 5);                      
   tft.print("%");
   tft.print(targetHumidity);
-
+  
   lastTimeSentToCloud = millis() - postingInterval + 15000;
 }
 
@@ -300,18 +330,18 @@ void loop() {
 
   if (WiFi.status() != WL_CONNECTED) {
     if (!wifiErrorIconVisible) { 
-      drawNoWiFi(145, 7); 
+      drawNoWiFi(145, 7);
       wifiErrorIconVisible = true;
     }
   } else {
     if (wifiErrorIconVisible) { 
-      tft.fillRect(135, 0, 25, 24, ST77XX_BLACK); 
+      tft.fillRect(135, 0, 25, 24, ST77XX_BLACK);
       wifiErrorIconVisible = false;
     }
   }
 
   unsigned long now = millis();
-
+  
   // Handle Incoming Telegram Messages
   if (now - lastTimeBotRan > botRequestDelay) {
     int numNewMessages = bot.getUpdates(bot.last_message_received + 1);
@@ -319,7 +349,7 @@ void loop() {
       handleNewMessages(numNewMessages);
       numNewMessages = bot.getUpdates(bot.last_message_received + 1);
       yield(); 
-      delay(100); 
+      delay(100);
     }
     lastTimeBotRan = millis(); 
   }
@@ -327,8 +357,9 @@ void loop() {
   // Sensor Reading and Display Update (Every 2 Seconds)
   if (now - prevM >= 2000) {
     prevM = now;
-
-    float h = dht.readHumidity() + 5.0;
+    
+    // DHT Calibration adjustment
+    float h = dht.readHumidity();
     float t = dht.readTemperature();
 
     int moisturePurple = constrain(map(analogRead(MOISTURE_PIN_PURPLE), AirValue, WaterValue, 0, 100), 0, 100);
@@ -345,7 +376,7 @@ void loop() {
 
     tft.setTextColor(COLOR_PURPLE, ST77XX_BLACK);
     tft.setCursor(0, 35);
-    tft.print("MOR: "); 
+    tft.print("MOR: ");
     if(moisturePurple < 100) tft.print(" ");
     if(moisturePurple < 10) tft.print(" ");
     tft.print(moisturePurple);
@@ -357,14 +388,14 @@ void loop() {
       tft.print("DEPO BOS ");
     } else {
       tft.setTextColor(COLOR_PURPLE, ST77XX_BLACK);   
-      if(isWateringPurple) tft.print(" SULANIYOR");
-      else if (moisturePurple < targetHumidity) tft.print(" BEKLIYOR "); 
-      else tft.print(" HAZIR    ");
+      if(isWateringPurple) tft.print("SULANIYOR");
+      else if (moisturePurple < targetHumidity) tft.print("BEKLIYOR ");
+      else tft.print("HAZIR    ");
     }
 
     tft.setTextColor(COLOR_WHITE, ST77XX_BLACK);
     tft.setCursor(0, 65);
-    tft.print("BYZ: "); 
+    tft.print("BYZ: ");
     if(moistureWhite < 100) tft.print(" ");
     if(moistureWhite < 10) tft.print(" ");
     tft.print(moistureWhite);
@@ -376,9 +407,9 @@ void loop() {
       tft.print("DEPO BOS ");
     } else {
       tft.setTextColor(ST77XX_WHITE, ST77XX_BLACK); 
-      if(isWateringWhite) tft.print(" SULANIYOR");
-      else if (moistureWhite < targetHumidity) tft.print(" BEKLIYOR "); 
-      else tft.print(" HAZIR    ");
+      if(isWateringWhite) tft.print("SULANIYOR");
+      else if (moistureWhite < targetHumidity) tft.print("BEKLIYOR ");
+      else tft.print("HAZIR    ");
     }
 
     tft.setCursor(0, 105);
@@ -406,7 +437,7 @@ void loop() {
       emptyTankMsgSent = false; 
 
       drawSmileyFace(225, 113);
-
+      
       if(isWateringPurple) {
          if(now - actionTimerPurple >= WATERING_DURATION || moisturePurple >= targetHumidity) {
             digitalWrite(PUMP_PIN_PURPLE, LOW);
@@ -418,6 +449,7 @@ void loop() {
             digitalWrite(PUMP_PIN_PURPLE, HIGH);
             isWateringPurple = true;
             actionTimerPurple = now;
+            purplePumpCount++;
          }
       }
 
@@ -431,12 +463,14 @@ void loop() {
          if(moistureWhite < targetHumidity && (now - actionTimerWhite >= COOLDOWN || actionTimerWhite == 0)) {
             digitalWrite(PUMP_PIN_WHITE, HIGH);
             isWateringWhite = true;
+            whitePumpCount++;
             actionTimerWhite = now;
          }
       }
     }
 
     // --- THINGSPEAK CLOUD DATA LOGGING (Every 15 Minutes) ---
+ 
     if (now - lastTimeSentToCloud >= postingInterval) {
       
       if (!isnan(t) && !isnan(h)) {
@@ -445,19 +479,28 @@ void loop() {
         ThingSpeak.setField(3, moisturePurple);
         ThingSpeak.setField(4, moistureWhite);
         ThingSpeak.setField(5, targetHumidity);
+        ThingSpeak.setField(7, purplePumpCount); 
+        ThingSpeak.setField(8, whitePumpCount);
+
+        int tankStatus = (digitalRead(FLOAT_SWITCH_PIN) == HIGH) ? 0 : 100;
+        ThingSpeak.setField(6, tankStatus);
 
         int httpCode = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
         
         if (httpCode == 200) {
           Serial.println("ThingSpeak Guncellemesi Basarili. ✅");
+          purplePumpCount = 0;
+          whitePumpCount = 0;
+
         } else {
           Serial.println("Buluta gonderilemedi. HTTP Hata Kodu: " + String(httpCode));
         }
       } else {
-        Serial.println("Sensorden bozuk veri (NaN) geldi, bulut atlatildi!");
+        Serial.println("Sensörden bozuk veri (NaN) geldi, bulut atlatildi!");
       }
       
       lastTimeSentToCloud = millis();
     }
   } 
+  
 }
