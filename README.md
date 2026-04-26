@@ -88,7 +88,7 @@ The hardware has been meticulously routed on a custom PCB. The pinout below refl
 | **SIG (Plant 2)** | GPIO 6 | ADC1 Channel (Mapped 4095 to 1000) |
 
 ### Submersible Water Pumps (Actuators)
-*Driven by IRFZ44N MOSFETs located on the right side of the PCB for optimized trace routing.*
+*Driven by IRLZ44N MOSFETs located on the right side of the PCB for optimized trace routing.*
 
 | Module / Pin | ESP32-S3 Pin | Additional Connection |
 | :--- | :--- | :--- |
@@ -117,28 +117,33 @@ The hardware has been meticulously routed on a custom PCB. The pinout below refl
 
 ### 2. Configure ThingSpeak (Cloud Analytics)
 1. Create a free account on [ThingSpeak](https://thingspeak.com/).
-2. Create a **New Channel** and enable 5 Fields:
+2. Create a **New Channel** and enable 8 Fields:
    * Field 1: Temperature (°C)
    * Field 2: Air Humidity (%)
    * Field 3: Purple Plant Moisture (%)
    * Field 4: White Plant Moisture (%)
    * Field 5: Target Humidity (%)
+   * Field 6: Water Tank Status
+   * Field 7: Pump 1 Runs
+   * Field 8: Pump 2 Runs
 3. Go to the **API Keys** tab and copy your `Channel ID` and `Write API Key`.
 
 <img width="1190" height="852" alt="Schematic_View_Mei_v2" src="https://github.com/user-attachments/assets/2b528a7e-313b-4020-b6cc-1ab8ad046026" />
 
 ---
 
-## 📱 Telegram Command Interface
+##  Telegram Command Interface
 *Note: The system is deployed for personal use in a real-world environment, therefore custom interaction messages are kept in the native language (Turkish) to maintain its organic feel.*
 
 * `📊 /status` - Fetches real-time sensor data, screen brightness, and water tank status.
 * `💧 /nem <value>` - Dynamically sets the target soil moisture threshold (20% - 75%).
 * `💡 /light <value>` - Adjusts the physical TFT screen brightness via PWM (0 - 100).
+* `⏳ /time <value>` - Sets the watering pump active duration in seconds (1 - 10).
+* `⏱️ /wait <value>` - Sets the cooldown period between waterings in minutes (1 - 60).
 * `❓ /help` - Displays the command menu.
-* `✨ /smile` - Prints a random easter-egg message from a Flash-memory stored array.
+* `✨ /smile` - Prints a random easter-egg message from a Flash-memory stored array..
 
-## 📊 Roadmap & Milestones
+##  Roadmap & Milestones
 * [x] **Custom PCB Design:** Successfully migrated from protoboard to a custom-designed, noise-isolated PCB via EasyEDA. (Gerber & Source files available in the [Hardware](Mei%20v2%20Autonomous%20Watering%20System/Hardware/) directory).
 * [ ] **Predictive Analysis:** Utilizing the exported CSV time-series data from ThingSpeak to train a basic Machine Learning regression model for water depletion forecasting.
 
