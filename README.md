@@ -141,7 +141,6 @@ The hardware has been meticulously routed on a custom PCB. The pinout below refl
 * `⏳ /time <value>` - Sets the watering pump active duration in seconds (1 - 10).
 * `⏱️ /wait <value>` - Sets the cooldown period between waterings in minutes (1 - 60).
 * `❓ /help` - Displays the command menu.
-* `✨ /smile` - Prints a random easter-egg message from a Flash-memory stored array..
 
 ##  Roadmap & Milestones
 * [x] **Custom PCB Design:** Successfully migrated from protoboard to a custom-designed, noise-isolated PCB via EasyEDA. (Gerber & Source files available in the [Hardware](Mei%20v2%20Autonomous%20Watering%20System/Hardware/) directory).
