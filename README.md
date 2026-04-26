@@ -106,6 +106,8 @@ The hardware has been meticulously routed on a custom PCB. The pinout below refl
 | **Pin 1** | GPIO 46 | Configured as `INPUT_PULLUP`. |
 | **Pin 2** | GND | Triggers `HIGH` when the tank is empty, halting the system. |
 
+<img width="1190" height="852" alt="Schematic_View_Mei_v2" src="https://github.com/user-attachments/assets/2b528a7e-313b-4020-b6cc-1ab8ad046026" />
+
 ---
 
 ##  Step-by-Step Setup Guide
@@ -127,8 +129,6 @@ The hardware has been meticulously routed on a custom PCB. The pinout below refl
    * Field 7: Pump 1 Runs
    * Field 8: Pump 2 Runs
 3. Go to the **API Keys** tab and copy your `Channel ID` and `Write API Key`.
-
-<img width="1190" height="852" alt="Schematic_View_Mei_v2" src="https://github.com/user-attachments/assets/2b528a7e-313b-4020-b6cc-1ab8ad046026" />
 
 ---
 
