@@ -17,8 +17,8 @@ The software architecture focuses on **non-blocking asynchronous task management
 ##  Parts Required
 
 **Core Components:**
-* 1x ESP32 DevKit
-* 1x 1.14" IPS LCD Display (ST7789 Driver, SPI Interface)
+* 1x ESP32-S3 DevKit
+* 1x 1.14" 7-Pin Oled Display RGB (ST7789 Driver, SPI Interface)
 * 1x DHT22 Temperature & Humidity Sensor
 * 2x Capacitive Soil Moisture Sensors (v1.2 recommended)
 * 2x 5V Mini Submersible Water Pumps
