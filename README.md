@@ -25,7 +25,7 @@ The software architecture focuses on **non-blocking asynchronous task management
 * 1x Water Level Float Switch (Tank dry-run protection)
 
 **Electronic Components & Power (Custom PCB Specs):**
-* 2x N-Channel Power MOSFETs (e.g., IRFZ44N) for driving the pumps
+* 2x N-Channel Power MOSFETs *IRLZ44N [not IRFZ] for driving the pumps
 * 2x 1N4007 Flyback Diodes (Crucial for preventing motor voltage spikes)
 * 1x 10kΩ Resistor (Pull-up for DHT22 data line)(if there is non between gnd and signal pin)
 * 1x 5V Power Supply (Min 2A recommended to handle dual pump current spikes)
